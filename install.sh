@@ -37,7 +37,7 @@ if [ ! -f "raspi-blinka.py" ]; then
 fi
 
 echo "Running Blinka installer..."
-sudo -E env PATH=$PATH python3 raspi-blinka.py
+printf 'n\n' | sudo -E env PATH=$PATH python3 raspi-blinka.py
 
 echo "Installing CircuitPython libraries..."
 pip3 install --upgrade adafruit_blinka
