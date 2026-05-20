@@ -52,26 +52,9 @@ sudo i2cdetect -y 1
 echo ""
 echo "If you do NOT see address 3c:"
 echo "Run: sudo raspi-config"
-echo "Then enable:"
+echo "Then enable (I2C):"
 echo "3 Interface Options -> I5 I2C -> Yes"
-echo "Also fix connection of screen"
-
-# Clone repository if not already present
-if [ ! -d "oled-tests" ]; then
-    echo "Cloning OLED test repository..."
-    git clone https://github.com/Wm-Mason-Cyber/oled-ip-display-for-rpi
-fi
-echo "Entering project directory..."
-cd oled-ip-display-for-rpi
+echo "Check the OLED screen connection to screen"
 
 echo ""
 echo "Setup complete."
-echo ""
-echo "SDA >>> 1"
-echo "SCL >>> 3"
-echo "VCC >>> 5"
-echo "GND >>> 6"
-echo ""
-echo "2 4 6"
-echo "1 3 5"
-
