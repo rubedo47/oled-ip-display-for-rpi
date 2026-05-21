@@ -1,27 +1,7 @@
-# Raspberry Pi IP Display on SSD1306 OLED
-#
-# Hardware:
-# - Raspberry Pi
-# - SSD1306 OLED display (128x64 I2C)
-#
-# Wiring (I2C):
-# OLED VCC -> 3.3V
-# OLED GND -> GND
-# OLED SCL -> GPIO3 (SCL)
-# OLED SDA -> GPIO2 (SDA)
-#
-# Install dependencies:
-# sudo apt update
-# sudo apt install python3-pip -y
-# pip3 install adafruit-circuitpython-ssd1306 pillow netifaces
-#
-# Enable I2C:
-# sudo raspi-config
-# Interface Options -> I2C -> Enable
-
 import time
 import socket
 import netifaces
+import psutil
 from PIL import Image, ImageDraw, ImageFont
 import board
 import busio
@@ -66,17 +46,36 @@ def get_ip_address():
     return "No Network"
 
 
+def get_cpu_temp():
+    """Read CPU temperature."""
+    try:
+        with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+            temp = float(f.read()) / 1000.0
+            return f"{temp:.1f}C"
+    except:
+        return "N/A"
+
+
+def get_memory_usage():
+    """Get RAM usage percentage."""
+    memory = psutil.virtual_memory()
+    return f"{memory.percent}%"
+
+
 while True:
     # Clear drawing area
     draw.rectangle((0, 0, WIDTH, HEIGHT), outline=0, fill=0)
 
     hostname = socket.gethostname()
     ip = get_ip_address()
+    cpu_temp = get_cpu_temp()
+    mem_usage = get_memory_usage()
 
     # Draw text
     draw.text((0, 0), "Raspberry Pi", font=font, fill=255)
-    draw.text((0, 20), f"Host: {hostname}", font=font, fill=255)
-    draw.text((0, 40), f"IP: {ip}", font=font, fill=255)
+    draw.text((0, 16), f"Host: {hostname}", font=font, fill=255)
+    draw.text((0, 28), f"IP: {ip}", font=font, fill=255)
+    draw.text((0, 40), f"TEMP: {cpu_temp}  RAM: {mem_usage}", font=font, fill=255)
 
     # Display image
     oled.image(image)
